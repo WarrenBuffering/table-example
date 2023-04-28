@@ -1,0 +1,308 @@
+---
+menu: Components
+parent: Data Tables
+name: Data Table Example
+route: /components/data-tables/data-table-example
+---
+
+import { Fragment, useState } from "react";
+import { Playground, Props } from "docz";
+
+import Avatar from "../Avatar";
+import Button from "../buttons/Button";
+import Metadata from "../Metadata";
+import Table from "./buildingBlocks/Table";
+import TableCell from "./buildingBlocks/TableCell";
+import TableRow from "./buildingBlocks/TableRow";
+import TableHeaderCell from "./buildingBlocks/TableHeaderCell";
+import TableHeaderRow from "./buildingBlocks/TableHeaderRow";
+import { Icon } from "../../iconography";
+import { meetings } from "./doczData";
+
+## Building-Blocks
+
+`Table` is being shipped in this way to provide flexibility for implementation.
+Each piece can be used independently or as part of a whole. The building block
+patterns used emulate and can be used with
+[react-table](https://tanstack.com/table/v8/docs/guide/introduction) and other
+third-party table libraries following the same paradigm should you choose to do
+so.
+
+These components, along with `Table` are used to assemble the
+full-implementation example found below.
+
+- [TableCell](/components/data-tables/building-blocks/table-cell)
+- [TableHeaderCell](/components/data-tables/building-blocks/table-header-cell)
+- [TableHeaderRow](/components/data-tables/building-blocks/table-header-row)
+- [TableRow](/components/data-tables/building-blocks/table-row)
+
+## Full Implementation Example
+
+Following is an example of how the RDS suite of table components can be used to
+assemble a fully-functioning RDS-styled table - paired with an array data-set of
+objects following the shape:
+
+```
+[
+  {
+    attendeesCount: number,
+    endDatetime: datetime,
+    hostInitials: string,
+    id: number,
+    isRead: boolean,
+    startDatetime: datetime,
+    source: string (icon name),
+    title: string,
+  },
+  {
+    ...
+  },
+]
+```
+
+<Playground style={{ overflow: "hidden" }}>
+  {() => {
+    const [data, setData] = useState(meetings);
+    const [sortedColumnTitle, setSortedColumnTitle] = useState("Date & Time");
+    const [isSelectEnabled, setIsSelectEnabled] = useState(true);
+    const [isSelectAllChecked, setIsSelectAllChecked] = useState(false);
+    const [selectedRowIDs, setSelectedRowIDs] = useState([]);
+    const meetingHeaders = [
+      {
+        align: "start",
+        initialSortDirection: "descending",
+        isSortable: true,
+        isSortRotationInverted: true,
+        sortKey: "endDatetime",
+        title: "Date & Time",
+      },
+      {
+        align: "start",
+        initialSortDirection: null,
+        isSortable: true,
+        isSortRotationInverted: false,
+        sortKey: "title",
+        title: "Meeting Title",
+      },
+      {
+        align: "center",
+        initialSortDirection: null,
+        isSortable: true,
+        isSortRotationInverted: false,
+        sortKey: "source",
+        title: "Source",
+      },
+      {
+        align: "center",
+        initialSortDirection: null,
+        isSortable: true,
+        isSortRotationInverted: false,
+        sortKey: "host",
+        title: "Host",
+      },
+      {
+        align: "end",
+        initialSortDirection: null,
+        isSortable: true,
+        isSortRotationInverted: false,
+        sortKey: "attendeesCount",
+        title: "Attendees",
+      },
+    ];
+    const handleCheckboxClick = (rowID) => {
+      if (selectedRowIDs.includes(rowID)) {
+        const newRowIDs = selectedRowIDs.filter((id) => id !== rowID);
+        setSelectedRowIDs(newRowIDs);
+      } else {
+        const newRowIDs = [...selectedRowIDs];
+        newRowIDs.push(rowID);
+        setSelectedRowIDs(newRowIDs);
+      }
+    };
+    const handleSortChange = ({ title, sortDirection }, sortKey) => {
+      if (!sortDirection) {
+        setData(meetings);
+      } else {
+        const sortedData = [...data];
+        const comparator = (a, b) =>
+          sortDirection === "ascending"
+            ? a[sortKey] > b[sortKey]
+            : b[sortKey] > a[sortKey];
+        sortedData.sort((a, b) => (comparator(a, b) ? 1 : -1));
+        setData(sortedData);
+        setSortedColumnTitle(title);
+      }
+    };
+    const handleTableHeaderSelect = () => {
+      if (!isSelectAllChecked && selectedRowIDs.length) {
+        setSelectedRowIDs([]);
+      } else {
+        setIsSelectAllChecked(!isSelectAllChecked);
+      }
+    };
+    const toggleSelectEnabled = () => setIsSelectEnabled(!isSelectEnabled);
+    return (
+      <Fragment>
+        <div
+          style={{
+            marginBottom: 16,
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <h3>{`Select Enabled: ${isSelectEnabled}`}</h3>
+          <Button
+            color="tint"
+            hierarchy="primary"
+            onClick={toggleSelectEnabled}
+          >
+            {isSelectEnabled ? "Disable Select" : "Enable Select"}
+          </Button>
+        </div>
+        <div>
+          <Table>
+            <thead>
+              <TableHeaderRow
+                hasRowsWithIndicators
+                hasSelectedRows={!!selectedRowIDs.length}
+                isSelectable={isSelectEnabled}
+                isSelected={isSelectAllChecked}
+                onSelect={handleTableHeaderSelect}
+                rowActions={
+                  <TableActions
+                    onArchiveClick={() => {}}
+                    onDeleteClick={() => {}}
+                    onUploadClick={() => {}}
+                  />
+                }
+              >
+                {meetingHeaders.map((cell) => (
+                  <TableHeaderCell
+                    align={cell.align}
+                    key={cell.title}
+                    initialSortDirection={cell.initialSortDirection}
+                    isSortable={cell.isSortable}
+                    isSorted={sortedColumnTitle === cell.title}
+                    isSortRotationInverted={cell.isSortRotationInverted}
+                    onSortChange={(data) =>
+                      handleSortChange(data, cell.sortKey)
+                    }
+                    title={cell.title}
+                  />
+                ))}
+              </TableHeaderRow>
+            </thead>
+            <tbody>
+              {data.map((row, index) => (
+                <TableRow
+                  hasRowsWithIndicators
+                  actions={
+                    <TableActions
+                      onArchiveClick={() =>
+                        window.alert(
+                          `Archive clicked - row title: ${row.title}`,
+                        )
+                      }
+                      onDeleteClick={() =>
+                        window.alert(`Delete clicked. row title: ${row.title}`)
+                      }
+                    />
+                  }
+                  key={row.id}
+                  indicatorStatus={
+                    row.readStatus === "unread" ? "positive" : undefined
+                  }
+                  isSelectable={isSelectEnabled}
+                  isSelected={
+                    isSelectAllChecked || selectedRowIDs.includes(row.id)
+                  }
+                  onSelect={() => handleCheckboxClick(row.id)}
+                >
+                  <TableCell>
+                    <div style={{ flexDirection: "column" }}>
+                      <div>
+                        <Metadata isNotPadded>
+                          <Metadata.Item
+                            dateOptions={{
+                              showDate: true,
+                              date: new Date(row.startDatetime),
+                            }}
+                          />
+                        </Metadata>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <Metadata isNotPadded>
+                          <Metadata.Item
+                            dateOptions={{
+                              showDate: false,
+                              showTime: true,
+                              date: new Date(row.startDatetime),
+                            }}
+                          />
+                        </Metadata>
+                        <span style={{ padding: "0 2px" }}> - </span>
+                        <Metadata isNotPadded>
+                          <Metadata.Item
+                            dateOptions={{
+                              showDate: false,
+                              showTime: true,
+                              date: new Date(row.endDatetime),
+                            }}
+                          />
+                        </Metadata>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <p
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        maxWidth: 225,
+                      }}
+                    >
+                      {row.title}
+                    </p>
+                  </TableCell>
+                  <TableCell align="center">{row.source}</TableCell>
+                  <TableCell align="center">
+                    <Avatar initials={row.hostInitials} size={40} />
+                  </TableCell>
+                  <TableCell align="end">
+                    <p style={{ fontWeight: "600" }}>{row.attendeesCount}</p>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </Fragment>
+    );
+    function TableActions(props) {
+      return (
+        <Fragment>
+          <Button
+            color="neutral"
+            hierarchy="tertiary"
+            onClick={props.onArchiveClick}
+            size="medium"
+            style={{ marginLeft: 4 }}
+          >
+            <Icon.Archive24 />
+          </Button>
+          <Button
+            color="neutral"
+            hierarchy="tertiary"
+            onClick={props.onDeleteClick}
+            size="medium"
+            style={{ marginLeft: 4 }}
+          >
+            <Icon.Bin24 />
+          </Button>
+        </Fragment>
+      );
+    }
+  }}
+</Playground>

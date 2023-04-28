@@ -1,0 +1,258 @@
+---
+menu: Components
+parent: Data Tables
+subparent: Building Blocks
+name: TableCell
+route: /components/data-tables/building-blocks/table-cell
+version: beta
+---
+
+import { Playground, Props } from "docz";
+
+import TableCell, { TableCellDocz } from ".";
+import TableHeaderCell from "../TableHeaderCell";
+import Avatar from "../../../Avatar";
+
+# TableCell
+
+`<TableCell>` is a design-system styled, root element specifying accessibility
+attributes. It can be used as a standalone component, but also serves as a base
+to more specific RDS TableCell components.
+
+`TableCell` can be used a standalone component, or with other RDS-provided table
+building-blocks
+([see full table implementation](/components/data-tables/data-table-example))
+for the development of OOD styled HTML tables.
+
+## Best Practices
+
+- Avoid using defined widths and instead specify width on the header `<th>`
+  whenever possible.
+- Note: When nested in a `table` a border will be applied to its child cells.
+  This can be overridden with `border: none` and/or `border-spacing: 0`
+  properties.
+
+### Alignment
+
+In general, align text left, numbers right, and graphics center. These are
+guidelines, not rules, and there are some exceptions. Here are some examples:
+
+#### Quantitative Numbers (always right-aligned)
+
+- Amounts (money, quantities)
+- Measures
+- Percentages
+
+#### Qualitative Numbers (can be left-aligned)
+
+- Date
+- Zip/Postal Code
+- Phone Number
+
+## Properties
+
+<Props of={TableCellDocz} />
+
+## Examples
+
+### Align
+
+#### Start (Default)
+
+By default TableCell's children have `start` alignment
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell color="#eee" width={200}>
+          Content
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+#### Center
+
+To center children, specify `align="center"`
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell align="center" color="#eee" width={200}>
+          Content
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+#### End
+
+To align children to the right, specify `align="end"`
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell align="end" color="#eee" width={200}>
+          Content
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+### Align + Right-to-Left
+
+`isRTL` will display cell contents in a right-to-left fashion.
+
+#### Start
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell isRTL color="#eee" width={200}>
+          غينيا واست
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+#### Center
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell isRTL align="center" color="#eee" width={200}>
+          غينيا واست
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+#### End
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell isRTL align="end" color="#eee" width={200}>
+          غينيا واست
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+### ColSpan
+
+The `colSpan` attribute in HTML specifies the number of columns a cell should
+span. It allows the single table cell to span the width of more than one cell or
+column. It provides the same functionality as “merge cell” in a spreadsheet
+program like Excel.
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell color="lightblue">January</TableCell>
+        <TableCell color="lightgreen">
+          <p>$100</p>
+        </TableCell>
+      </tr>
+      <tr>
+        <TableCell color="lightgreen">
+          <p>February</p>
+        </TableCell>
+        <TableCell color="lightblue">
+          <p>$80</p>
+        </TableCell>
+      </tr>
+      <tr>
+        <TableCell color="mediumpurple" colSpan={2}>
+          <p>Sum: $180</p>
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+### Rowspan
+
+The `rowspan` attribute in HTML specifies the number of rows a cell should span.
+That is if a row spans two rows, it means it will take up the space of two rows
+in that table. It allows the single table cell to span the height of more than
+one cell or row. It provides the same functionality as “merge cell” in the
+spreadsheet program like Excel.
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <tbody>
+      <tr>
+        <TableCell color="lightgreen">
+          <p>January</p>
+        </TableCell>
+        <TableCell color="lightblue">
+          <p>$100</p>
+        </TableCell>
+        <TableCell color="mediumpurple" rowSpan={2}>
+          <p>$50</p>
+        </TableCell>
+      </tr>
+      <tr>
+        <TableCell color="lightblue">
+          <p>February</p>
+        </TableCell>
+        <TableCell color="lightgreen">
+          <p>$80</p>
+        </TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>
+
+### Usage Example
+
+_Note: This table follows the above stated best-practices._
+
+- **Date & Time** is aligned `"start"` by default.
+- **Source** and **Host** are graphics and have been centered via
+  `align="center"` prop.
+- **Attendees** is a number and has been right-aligned via `align="end"` prop.
+
+<Playground>
+  <table style={{ border: 0, borderCollapse: "collapse" }}>
+    <thead>
+      <tr>
+        <TableHeaderCell title="Date & Time" />
+        <TableHeaderCell title="Meeting Title" />
+        <TableHeaderCell align="center" title="Source" />
+        <TableHeaderCell align="center" title="Host" />
+        <TableHeaderCell align="end" title="Attendees" />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <TableCell>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div>Feb 6, 2022</div>
+            <div>9:00am - 10:30am</div>
+          </div>
+        </TableCell>
+        <TableCell>Corporate Sustainability</TableCell>
+        <TableCell align="center">[zoom]</TableCell>
+        <TableCell align="center">
+          <Avatar initials="BF" size={40} />
+        </TableCell>
+        <TableCell align="end">3</TableCell>
+      </tr>
+    </tbody>
+  </table>
+</Playground>

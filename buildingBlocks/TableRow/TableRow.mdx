@@ -1,0 +1,220 @@
+---
+menu: Components
+parent: Data Tables
+subparent: Building Blocks
+name: TableRow
+route: /components/data-tables/building-blocks/table-row
+version: beta
+---
+
+import { Playground, Props } from "docz";
+import { Fragment, useState } from "react";
+
+import TableRow, { TableRowDocz } from ".";
+
+import Button from "../../../buttons/Button";
+import TableCell from "../TableCell";
+import { Icon } from "../../../../iconography";
+
+# TableRow
+
+`TableRow` is an RDS styled `tr` component which handles layout, as well as some
+broader OOD patterns including:
+
+- Row Selection
+- Row Indicators
+- Row Actions
+
+## Best Practices
+
+- OOD strongly suggests a maximum of 2 action items (buttons) per row
+
+`TableRow` can be used a standalone component, or with other RDS-provided table
+building-blocks
+([see full table implementation](/components/data-tables/data-table-example))
+for the development of OOD styled HTML tables.
+
+## Properties
+
+<Props of={TableRowDocz} />
+
+## Building-Blocks
+
+Components used within `TableRow` include:
+
+- [Checkbox](/components/checkbox)
+- [Indicator](/components/indicator)
+
+## Examples
+
+### TableRow w/ `<td>` elements
+
+<Playground>
+  <table>
+    <tbody>
+      <TableRow>
+        <td>The</td>
+        <td>Quick</td>
+        <td>Brown</td>
+        <td>Fox</td>
+        <td>Jumped</td>
+        <td>Over</td>
+        <td>The</td>
+        <td>Lazy</td>
+        <td>Dog</td>
+      </TableRow>
+    </tbody>
+  </table>
+</Playground>
+
+### TableRow w/ RDS `TableCell` elements
+
+<Playground>
+  <table>
+    <tbody>
+      <TableRow>
+        <TableCell>The</TableCell>
+        <TableCell>Quick</TableCell>
+        <TableCell>Brown</TableCell>
+        <TableCell>Fox</TableCell>
+        <TableCell>Jumped</TableCell>
+        <TableCell>Over</TableCell>
+        <TableCell>The</TableCell>
+        <TableCell>Lazy</TableCell>
+        <TableCell>Dog</TableCell>
+      </TableRow>
+    </tbody>
+  </table>
+</Playground>
+
+### Selectable TableRow
+
+Rows can be selectable. Click the `Checkbox` to toggle.
+
+<Playground>
+  {() => {
+    const [isSelected, setIsSelected] = useState(false);
+    const toggleSelected = () => setIsSelected(!isSelected);
+    return (
+      <table>
+        <tbody>
+          <TableRow
+            isSelectable
+            isSelected={isSelected}
+            onSelect={toggleSelected}
+          >
+            <TableCell>The</TableCell>
+            <TableCell>Quick</TableCell>
+            <TableCell>Brown</TableCell>
+            <TableCell>Fox</TableCell>
+            <TableCell>Jumped</TableCell>
+            <TableCell>Over</TableCell>
+            <TableCell>The</TableCell>
+            <TableCell>Lazy</TableCell>
+            <TableCell>Dog</TableCell>
+          </TableRow>
+        </tbody>
+      </table>
+    );
+  }}
+</Playground>
+
+### TableRow w/ Indicator
+
+TableRow shows an` Indicator` when provided an indicator status. Click row to
+clear.
+
+<Playground>
+  {() => {
+    const [indicatorStatus, setIndicatorStatus] = useState("positive");
+    const removeIndicator = () => setIndicatorStatus(null);
+    const resetIndicator = () => setIndicatorStatus("positive");
+    return (
+      <Fragment>
+        {!indicatorStatus && (
+          <div style={{ marginBottom: 16 }}>
+            <Button color="tint" hierarchy="primary" onClick={resetIndicator}>
+              Reset Indicator Status
+            </Button>
+          </div>
+        )}
+        <table>
+          <tbody>
+            <TableRow
+              indicatorStatus={indicatorStatus}
+              onClick={removeIndicator}
+            >
+              <TableCell>The</TableCell>
+              <TableCell>Quick</TableCell>
+              <TableCell>Brown</TableCell>
+              <TableCell>Fox</TableCell>
+              <TableCell>Jumped</TableCell>
+              <TableCell>Over</TableCell>
+              <TableCell>The</TableCell>
+              <TableCell>Lazy</TableCell>
+              <TableCell>Dog</TableCell>
+            </TableRow>
+          </tbody>
+        </table>
+      </Fragment>
+    );
+  }}
+</Playground>
+
+### TableRow w/ Actions
+
+TableRow shows provided `action` components on the right side of the row.
+Actions only show on hover or focus for desktop and always show on mobile.
+
+<Playground>
+  {() => {
+    return (
+      <table style={{ borderSpacing: 0 }}>
+        <tbody>
+          <TableRow
+            actions={
+              <TableActions
+                onArchiveClick={() => window.alert(`Archive clicked`)}
+                onDeleteClick={() => window.alert(`Delete clicked`)}
+              />
+            }
+          >
+            <TableCell>The</TableCell>
+            <TableCell>Quick</TableCell>
+            <TableCell>Brown</TableCell>
+            <TableCell>Fox</TableCell>
+            <TableCell>Jumped</TableCell>
+            <TableCell>Over</TableCell>
+            <TableCell>The</TableCell>
+            <TableCell>Lazy</TableCell>
+            <TableCell>Dog</TableCell>
+          </TableRow>
+        </tbody>
+      </table>
+    );
+    function TableActions(props) {
+      return (
+        <Fragment>
+          <Button
+            color="neutral"
+            hierarchy="tertiary"
+            onClick={props.onArchiveClick}
+            size="medium"
+            style={{ marginLeft: 4 }}
+          >
+            <Icon.Archive24 />
+          </Button>
+          <Button
+            color="neutral"
+            hierarchy="tertiary"
+            onClick={props.onDeleteClick}
+            size="medium"
+            style={{ marginLeft: 4 }}
+          >
+            <Icon.Bin24 />
+          </Button>
+        </Fragment>
+      );
+    }
+  }}
+</Playground>

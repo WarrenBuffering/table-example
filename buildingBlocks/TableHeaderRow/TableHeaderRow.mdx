@@ -1,0 +1,206 @@
+---
+menu: Components
+parent: Data Tables
+subparent: Building Blocks
+name: TableHeaderRow
+route: /components/data-tables/building-blocks/table-header-row
+version: beta
+---
+
+import { Playground, Props } from "docz";
+import { Fragment, useState } from "react";
+
+import TableHeaderRow, { TableHeaderRowDocz } from ".";
+import TableHeaderCell from "../TableHeaderCell";
+import { Icon } from "../../../../iconography";
+
+# TableHeaderRow
+
+`TableHeaderRow` is an RDS styled `thead` component which handles layout which
+includes column-layout and spacing for some broader OOD `TableRow` patterns like
+row selection, row indicators and row actions.
+
+`TableHeaderRow` can be used a standalone component, or with other RDS-provided
+table building-blocks
+([see full table implementation](/components/data-tables/data-table-example))
+for the development of OOD styled HTML tables.
+
+## Properties
+
+<Props of={TableHeaderRowDocz} />
+
+## Building-Blocks
+
+Components used within `TableHeaderRow` include:
+
+- [Checkbox](/components/checkbox)
+
+## Examples
+
+### TableHeaderRow w/ `<th>` elements
+
+<Playground>
+  <table>
+    <tbody>
+      <TableHeaderRow>
+        <th>The</th>
+        <th>Quick</th>
+        <th>Brown</th>
+        <th>Fox</th>
+        <th>Jumped</th>
+        <th>Over</th>
+        <th>The</th>
+        <th>Lazy</th>
+        <th>Dog</th>
+      </TableHeaderRow>
+    </tbody>
+  </table>
+</Playground>
+
+### TableHeaderRow w/ RDS `TableHeaderCell` elements
+
+Additionally, if `TableHeaderRow` isn't being used with `Table`, the
+`borderSpacing` prop on table controls cell spacing and can remove the borders
+between cells.
+
+<Playground>
+  <table style={{ borderSpacing: 0 }}>
+    <tbody>
+      <TableHeaderRow>
+        <TableHeaderCell title="Date & Time" />
+        <TableHeaderCell title="Meeting Title" />
+        <TableHeaderCell title="Source" />
+        <TableHeaderCell title="Host" />
+        <TableHeaderCell title="Attendees" />
+      </TableHeaderRow>
+    </tbody>
+  </table>
+</Playground>
+
+### Selectable TableHeaderRow
+
+Rows can be selectable. Click the `Checkbox` to toggle.
+
+<Playground>
+  {() => {
+    const [isSelected, setIsSelected] = useState(false);
+    const toggleSelected = () => setIsSelected(!isSelected);
+    return (
+      <table style={{ borderSpacing: 0 }}>
+        <tbody>
+          <TableHeaderRow
+            isSelectable
+            isSelected={isSelected}
+            onSelect={toggleSelected}
+          >
+            <TableHeaderCell title="Date & Time" />
+            <TableHeaderCell title="Meeting Title" />
+            <TableHeaderCell align="center" title="Source" />
+            <TableHeaderCell align="center" title="Host" />
+            <TableHeaderCell align="end" title="Attendees" />
+          </TableHeaderRow>
+        </tbody>
+      </table>
+    );
+  }}
+</Playground>
+
+### Selectable TableHeaderRow w/ Rows Selected
+
+If `hasSelectedRows` is true, a click on the checkbox should clear the row
+selection. Per OOD standards.
+[See full table implementation](/components/data-tables/data-table-example)
+example for a more robust working example.
+
+<Playground>
+  {() => {
+    const [selectedRows, setSelectedRows] = useState([1, 2, 3]);
+    const [isSelected, setIsSelected] = useState(false);
+    const handleSelectPress = () => {
+      if (!isSelected && selectedRows.length) {
+        setSelectedRows([]);
+      } else {
+        setIsSelected(!isSelected);
+      }
+    };
+    return (
+      <table style={{ borderSpacing: 0 }}>
+        <tbody>
+          <TableHeaderRow
+            hasSelectedRows={!!selectedRows.length}
+            isSelectable
+            isSelected={isSelected}
+            onSelect={handleSelectPress}
+          >
+            <TableHeaderCell title="Date & Time" />
+            <TableHeaderCell title="Meeting Title" />
+            <TableHeaderCell align="center" title="Source" />
+            <TableHeaderCell align="center" title="Host" />
+            <TableHeaderCell align="end" title="Attendees" />
+          </TableHeaderRow>
+        </tbody>
+      </table>
+    );
+  }}
+</Playground>
+
+### TableHeaderRow w/ Sort
+
+TableHeaderRow's can be sortable. For more details on sort implementation, see
+[TableHeaderCell](/components/data-tables/building-blocks/table-header-cell).
+
+<Playground>
+  {() => {
+    const ColumnTitle = {
+      ATTENDEES: "Attendees",
+      DATE_AND_TIME: "Date & Time",
+      HOST: "Host",
+      MEETING_TITLE: "Meeting Title",
+      SOURCE: "Source",
+    };
+    const [sortedColumnTitle, setSortedColumnTitle] = useState("Attendees");
+    const handleSortChange = (data) => setSortedColumnTitle(data.title);
+    return (
+      <table style={{ borderSpacing: 0 }}>
+        <tbody>
+          <TableHeaderRow>
+            <TableHeaderCell
+              isSortRotationInverted
+              isSortable
+              isSorted={sortedColumnTitle === ColumnTitle.DATE_AND_TIME}
+              onSortChange={handleSortChange}
+              title={ColumnTitle.DATE_AND_TIME}
+            />
+            <TableHeaderCell
+              isSortable
+              isSorted={sortedColumnTitle === ColumnTitle.MEETING_TITLE}
+              onSortChange={handleSortChange}
+              title={ColumnTitle.MEETING_TITLE}
+            />
+            <TableHeaderCell
+              isSortable
+              isSorted={sortedColumnTitle === ColumnTitle.SOURCE}
+              onSortChange={handleSortChange}
+              align="center"
+              title={ColumnTitle.SOURCE}
+            />
+            <TableHeaderCell
+              isSortable
+              isSorted={sortedColumnTitle === ColumnTitle.HOST}
+              onSortChange={handleSortChange}
+              align="center"
+              title={ColumnTitle.HOST}
+            />
+            <TableHeaderCell
+              isSortable
+              isSorted={sortedColumnTitle === ColumnTitle.ATTENDEES}
+              onSortChange={handleSortChange}
+              align="right"
+              title={ColumnTitle.ATTENDEES}
+            />
+          </TableHeaderRow>
+        </tbody>
+      </table>
+    );
+  }}
+</Playground>

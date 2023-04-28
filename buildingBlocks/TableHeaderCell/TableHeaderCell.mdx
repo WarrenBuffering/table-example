@@ -1,0 +1,349 @@
+---
+menu: Components
+parent: Data Tables
+subparent: Building Blocks
+name: TableHeaderCell
+route: /components/data-tables/building-blocks/table-header-cell
+version: beta
+---
+
+import { Playground, Props } from "docz";
+import { useState } from "react";
+
+import TableHeaderCell, { SortArgsDocz, TableHeaderCellDocz } from ".";
+
+# TableHeaderCell
+
+`<TableHeaderCell>` is a design-system component to be used in lieu of `<th />`
+elements within HTML `<table />` components.
+
+`TableHeaderCell` can be used a standalone component, or with other RDS-provided
+table building-blocks
+([see full table implementation](/components/data-tables/data-table-example))
+for the development of OOD styled HTML tables.
+
+## Best Practices
+
+### Alignment
+
+In general, align text left, numbers right, and graphics center. These are
+guidelines, not rules, and there are some exceptions. Here are some examples:
+
+#### Quantitative Numbers (always right-aligned)
+
+- Amounts (money, quantities)
+- Measures
+- Percentages
+
+#### Qualitative Numbers (can be left-aligned)
+
+- Date
+- Zip/Postal Code
+- Phone Number
+
+### Sorting
+
+_These are guidelines, not rules, so please choose a default sort order that
+makes sense for the data being shown._
+
+- Sorting alphabetically initial `sortDirection` value should be ascending ↑
+  (A-Z)
+- Sorting by date initial `sortDirection` should be descending ↓ (new to old)
+- Sorting by size initial `sortDirection` value should be descending ↓ (largest
+  to smallest)
+- Not all columns will be sortable eg. if the body cell has content with:
+  multiple values, differing categories or no particular order
+
+## Properties
+
+<Props of={TableHeaderCellDocz} />
+
+### onSortChange Params
+
+<Props of={SortArgsDocz} />
+
+## Examples
+
+### TableHeaderCell
+
+`TableHeaderCell` fills 100% of its parent width and is start-aligned by
+default.
+
+<Playground>
+  <table style={{ width: "100%" }}>
+    <thead>
+      <tr>
+        <TableHeaderCell title="Meeting Title" />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+### Sortable
+
+If `isSortable` and `isSorted` are `true`, header is sortable.
+
+#### Default
+
+<Playground>
+  {() => {
+    const [sortDirection, setSortDirection] = useState(null);
+    return (
+      <div>
+        <p>
+          Sort Direction: <strong>"{sortDirection || "null"}"</strong>
+        </p>
+        <table style={{ width: 300 }}>
+          <thead>
+            <tr>
+              <TableHeaderCell
+                isSortable
+                isSorted
+                onSortChange={(args) => setSortDirection(args.sortDirection)}
+                title="Meeting Title"
+              />
+            </tr>
+          </thead>
+        </table>
+      </div>
+    );
+  }}
+</Playground>
+
+#### Inverted Sort Rotation
+
+When inverted, sort rotation will be `"descending"` > `"ascending"` > `null`
+instead of the default `"ascending"` > `"descending"` > `null`.
+
+<Playground>
+  {() => {
+    const [sortDirection, setSortDirection] = useState(null);
+    return (
+      <div>
+        <p>
+          Sort Direction: <strong>"{sortDirection || "null"}"</strong>
+        </p>
+        <table style={{ width: 300 }}>
+          <thead>
+            <tr>
+              <TableHeaderCell
+                isSortable
+                isSorted
+                isSortRotationInverted
+                onSortChange={(args) => setSortDirection(args.sortDirection)}
+                title="Meeting Title"
+              />
+            </tr>
+          </thead>
+        </table>
+      </div>
+    );
+  }}
+</Playground>
+
+#### Initial Sort Direction ("descending")
+
+If a header begins sorted, an `initialSortDirection` property can be provided as
+long as `isSortable` and `isSorted` are `true`
+
+<Playground>
+  {() => {
+    const [sortDirection, setSortDirection] = useState("ascending");
+    return (
+      <div>
+        <p>
+          Sort Direction: <strong>"{sortDirection || "null"}"</strong>
+        </p>
+        <table style={{ width: 300 }}>
+          <thead>
+            <tr>
+              <TableHeaderCell
+                initialSortDirection="ascending"
+                isSortable
+                isSorted
+                onSortChange={(args) => setSortDirection(args.sortDirection)}
+                title="Meeting Title"
+              />
+            </tr>
+          </thead>
+        </table>
+      </div>
+    );
+  }}
+</Playground>
+
+### Align
+
+`align` controls horizontal alignment of content within the header.
+
+#### Left
+
+<Playground>
+  <table style={{ width: 300 }}>
+    <thead>
+      <tr>
+        <TableHeaderCell
+          align="start"
+          isSortable
+          isSorted
+          initialSortDirection="ascending"
+          title="Meeting Title"
+        />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+#### Center
+
+<Playground>
+  <table style={{ width: 300 }}>
+    <thead>
+      <tr>
+        <TableHeaderCell
+          align="center"
+          initialSortDirection="ascending"
+          isSortable
+          isSorted
+          title="Meeting Title"
+        />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+#### Right
+
+<Playground>
+  <table style={{ width: 300 }}>
+    <thead>
+      <tr>
+        <TableHeaderCell
+          align="end"
+          initialSortDirection="ascending"
+          isSortable
+          isSorted
+          title="Meeting Title"
+        />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+### Align + Right-to-Left
+
+`isRTL` will display header contents in a right-to-left fashion.
+
+#### Left
+
+<Playground>
+  <table style={{ width: 300 }}>
+    <thead>
+      <tr>
+        <TableHeaderCell
+          align="start"
+          initialSortDirection="ascending"
+          isSortable
+          isSorted
+          isRTL
+          title="غينيا واست"
+        />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+#### Center
+
+<Playground>
+  <table style={{ width: 300 }}>
+    <thead>
+      <tr>
+        <TableHeaderCell
+          align="center"
+          initialSortDirection="ascending"
+          isRTL
+          isSortable
+          isSorted
+          title="غينيا واست"
+        />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+#### Right
+
+<Playground>
+  <table style={{ width: 300 }}>
+    <thead>
+      <tr>
+        <TableHeaderCell
+          align="end"
+          initialSortDirection="ascending"
+          isRTL
+          isSortable
+          isSorted
+          title="غينيا واست "
+        />
+      </tr>
+    </thead>
+  </table>
+</Playground>
+
+### Usage Example
+
+_Note: This table follows the above stated best-practices._
+
+- **Date & Time**'s initial sort direction is `"descending"` via the
+  `isSortRotationInverted` prop
+- **Host** and **Attendees** are graphics and have been centered via
+  `align="center"` prop
+- **Attendees** is not sortable, as the cells each have multiple values
+- **Duration** is a measurement and has been right-aligned via `align="right"`
+  prop
+
+<Playground>
+  {() => {
+    const [activeSortColumn, setActiveSortColumn] = useState("");
+    const handleSortDirectionChange = (args) => {
+      setActiveSortColumn(args.title);
+    };
+    return (
+      <table style={{ width: "100%", overflow: "scroll" }}>
+        <thead>
+          <tr style={{ display: "flex", flexDirection: "row" }}>
+            <TableHeaderCell
+              isSortable
+              isSortRotationInverted
+              isSorted={activeSortColumn === "Date & Time"}
+              onSortChange={handleSortDirectionChange}
+              title="Date & Time"
+            />
+            <TableHeaderCell
+              isSortable
+              isSorted={activeSortColumn === "Meeting Title"}
+              onSortChange={handleSortDirectionChange}
+              title="Meeting Title"
+            />
+            <TableHeaderCell
+              align="center"
+              isSortable
+              isSorted={activeSortColumn === "Host"}
+              onSortChange={handleSortDirectionChange}
+              title="Host"
+            />
+            <TableHeaderCell align="center" title="Attendees" />
+            <TableHeaderCell
+              align="end"
+              isSortable
+              isSorted={activeSortColumn === "Duration"}
+              onSortChange={handleSortDirectionChange}
+              title="Duration"
+            />
+          </tr>
+        </thead>
+      </table>
+    );
+  }}
+</Playground>

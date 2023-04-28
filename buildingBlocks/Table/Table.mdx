@@ -1,0 +1,73 @@
+---
+menu: Components
+parent: Data Tables
+subparent: Building Blocks
+name: Table
+route: /components/data-tables/building-blocks/table
+version: beta
+---
+
+import { Playground, Props } from "docz";
+
+import Table, { TableDocz } from ".";
+
+import Avatar from "../../../Avatar";
+
+## Table
+
+**Note. This is not a full table component implementation. `Table` is an
+RDS-styled component which accepts children - to be in conjunction with
+RDS-provided table component building-blocks (links provided below) or
+independently.**
+
+`Table` handles the removal of cell borders, adds spacing between rows, and
+handles the scroll-y overflow for the parent `<table />` component.
+
+`Table` can be used a standalone component, or with other RDS-provided table
+building-blocks
+([see full table implementation](/components/data-tables/data-table-example))
+for the development of OOD styled HTML tables.
+
+## Properties
+
+<Props of={TableDocz} />
+
+## Example
+
+<Playground>
+  <div style={{ minWidth: "500px" }}>
+    <Table>
+      <thead>
+        <tr>
+          <th style={{ textAlign: "start" }}>Date & Time</th>
+          <th style={{ textAlign: "start" }}>Meeting Title</th>
+          <th style={{ textAlign: "start" }}>Source</th>
+          <th style={{ textAlign: "start" }}>Host</th>
+          <th style={{ textAlign: "start" }}>Attendees</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div
+              style={{
+                alignItems: "flex-start",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div>Feb 6, 2022</div>
+              <div>9:00am - 10:30am</div>
+            </div>
+          </td>
+          <td>Corporate Sustainability</td>
+          <td>[zoom]</td>
+          <td>
+            <Avatar initials="BF" size={40} />
+          </td>
+          <td>3</td>
+        </tr>
+      </tbody>
+    </Table>
+  </div>
+</Playground>
